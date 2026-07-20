@@ -9,6 +9,10 @@ A small PHP project that regenerates a static SVG badge every 12 hours with GitH
 - Writes the result to `public/views.svg`
 - Commits the SVG back to the repo on a 12-hour schedule
 
+## Demo
+
+![views.svg](public/views.svg)
+
 ## Install
 
 ```bash
