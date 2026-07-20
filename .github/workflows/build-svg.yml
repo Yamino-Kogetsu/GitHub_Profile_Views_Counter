@@ -1,0 +1,51 @@
+name: Build SVG
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      INPUT_REPOSITORY: Yamino-Kogetsu/Yamino-Kogetsu
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      INPUT_COUNT_TYPE: count
+      INPUT_BADGE_LABEL: Profile views
+      INPUT_BADGE_COLOR: blue
+      INPUT_BADGE_STYLE: flat
+      INPUT_BASE_COUNT: 0
+      INPUT_ABBREVIATED: false
+      OUTPUT_PATH: public/views.svg
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer:v2
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Build SVG
+        run: php bin/build-svg.php
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/views.svg
+          git diff --cached --quiet || git commit -m "chore: update svg [skip ci]"
+          git push
