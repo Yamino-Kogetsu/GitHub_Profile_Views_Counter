@@ -1,4 +1,4 @@
-# Odoru GitHub Profile Views Counter
+# GitHub Profile Views Counter
 
 A small PHP project that regenerates a static SVG badge every 12 hours with GitHub Actions.
 
